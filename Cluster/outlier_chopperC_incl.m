@@ -6,9 +6,10 @@
 % Dependencies: outlier_wavedecompC.m
 %
 % Outputs:
-%  data_LFP: 61-by-1 cell containing 61 matrices, each row of which 
-%            represents (by default) a 2-second time bin containing at 
-%            least one HGP peak outlier that may serve as the bin's center
+%  data_LFP: # of channels-by-1 cell containing one matrix per channel, 
+%            each row of which representing (by default) a 2-second time 
+%            bin containing at least one HGP peak outlier that may serve as
+%            the bin's center
 %  data_HGP: similar to the above, except the data has been
 %            bandpass-filtered, hilbert-transformed, turned into z-score,
 %        

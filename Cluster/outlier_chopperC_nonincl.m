@@ -2,6 +2,7 @@
 % HGP peak outlier-containing time bins (default 2 seconds)
 %
 % Created by Xi Jiang, Sept. 5th, 2014
+% Last edited by Xi Jiang, Sept.10th, 2014
 %
 % Dependencies: outlier_wavedecompC.m
 %
@@ -10,9 +11,10 @@
 %             respect to the elements in all_bins_seq
 %  bad_bins: logical indices of (allegedly) artifact-containing time bins, 
 %            with respect to the elements in all_bins_seq
-%  data_LFP: 61-by-1 cell containing 61 matrices, each row of which 
-%            represents (by default) a 2-second time bin containing at 
-%            least one HGP peak outlier that may serve as the bin's center
+%  data_LFP: # of channels-by-1 cell containing one matrix per channel, 
+%            each row of which representing (by default) a 2-second time 
+%            bin containing at least one HGP peak outlier that may serve as
+%            the bin's center
 %  data_HGP: similar to the above, except the data has been
 %            bandpass-filtered, hilbert-transformed, turned into z-score,
 %  new_bins: indices of time bin start/end points
@@ -104,8 +106,5 @@ function [good_bins,bad_bins,data_LFP,data_HGP,new_bins] = ...
         disp([num2str(i) ' channel(s) processed!'])
     
     end
-    
-    % combine overlapping bins into one, with a limit of 4s in bin length
-    
     
 end
