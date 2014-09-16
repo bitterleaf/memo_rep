@@ -90,24 +90,24 @@ function [data_LFP,data_HGP,new_starts,new_ends,good_peaks,bad_bins] = ...
         for j = 1:size(all_bins_LFP,1)
             if sum(abs(diff(data_LFP{i}(j,:))) < methods.tol) > methods.contthresh
                 % remove flatline artifacts
-                good_peaks{i}(good_peaks{i} >= new_starts(j) && good_peaks{i} <= new_ends(j)) = 0;
+                good_peaks{i}(good_peaks{i} >= new_starts(j) & good_peaks{i} <= new_ends(j)) = 0;
                 bad_bins = sort([bad_bins j]);
                 
             elseif max(data_HGP{i}(j,:)) > methods.peakthresh
                 % remove "too high" HGP peaks
-                good_peaks{i}(good_peaks{i} >= new_starts(j) && good_peaks{i} <= new_ends(j)) = 0;
+                good_peaks{i}(good_peaks{i} >= new_starts(j) & good_peaks{i} <= new_ends(j)) = 0;
                 bad_bins = sort([bad_bins j]);
                 
-            elseif any(data_raw(i,(j-1)*time_bin*sfreq+1:time_bin*sfreq*j) > LFP_elevation_thresh)
+            elseif any(data_LFP{i}(j,:) > LFP_elevation_thresh)
                 % remove extreme LFP elevations (electronic in origin? A common problem with NY394)
-                good_peaks{i}(good_peaks{i} >= new_starts(j) && good_peaks{i} <= new_ends(j)) = 0;
+                good_peaks{i}(good_peaks{i} >= new_starts(j) & good_peaks{i} <= new_ends(j)) = 0;
                 bad_bins = sort([bad_bins j]);
                 
             end
             good_peaks{i}(good_peaks{i} == 0) = [];
-            data_LFP{i}(bad_bins,:) = [];
-            data_HGP{i}(bad_bins,:) = [];
         end
+        data_LFP{i}(bad_bins,:) = [];
+        data_HGP{i}(bad_bins,:) = [];
         
         disp([num2str(i) ' channel(s) processed!'])
     end

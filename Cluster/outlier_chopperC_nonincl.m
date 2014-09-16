@@ -128,7 +128,7 @@ function [good_bins,bad_bins,data_LFP,data_HGP,new_bins] = ...
                 good_bins{i}(good_bins{i} == 0) = [];
                 bad_bins{i} = unique(sort([bad_bins{i} j]));
                 
-            elseif any(data_raw(i,(j-1)*time_bin*sfreq+1:time_bin*sfreq*j) > LFP_elevation_thresh)
+            elseif any(data_LFP{i}(j,:) > LFP_elevation_thresh)
                 % remove extreme LFP elevations (electronic in origin? A common problem with NY394)
                 good_bins{i}(good_bins{i} == j) = 0;
                 good_bins{i}(good_bins{i} == 0) = [];
