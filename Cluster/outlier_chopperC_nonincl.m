@@ -32,6 +32,13 @@
 %           -time_bin: integer representing size of time bins, in seconds
 %           -sfreq: sampling frequency (in Hz)
 %           -wavthresh: threshold (in z-score) for artifact detection
+%           -contthresh: threshold (in sampling points) for flat-lining artifact 
+%                        (i.e. how long the signal needs to stay at the exact same 
+%                        value before the time bin can be considered contaminated)
+%           -peakthresh: threshold (in z-score) for HGP peak outliers that are
+%                        likely to be artefactual
+%           -tol: floating number difference tolerance, for removal of flatline 
+%                        artifacts (consecutively occuring exact same values). 
 %
 
 
@@ -102,7 +109,34 @@ function [good_bins,bad_bins,data_LFP,data_HGP,new_bins] = ...
         bad_bins{i} = bad_bin_ind;
         data_LFP{i} = all_bins_LFP;
         data_HGP{i} = all_bins_HGP;
+        
+    % make sure centering does not re-introduce bad bins
     
+        % prepare for removing machine artifact
+        LFP_elevation_thresh = median(data_raw(i,:)) + 5*std(data_raw(i,:));
+        
+        for j = 1:size(all_bins_LFP,1)
+            if sum(abs(diff(data_LFP{i}(j,:))) < methods.tol) > methods.contthresh
+                % remove flatline artifacts
+                good_bins{i}(good_bins{i} == j) = 0;
+                good_bins{i}(good_bins{i} == 0) = [];
+                bad_bins{i} = unique(sort([bad_bins{i} j]));
+                
+            elseif max(data_HGP{i}(j,:)) > methods.peakthresh
+                % remove "too high" HGP peaks
+                good_bins{i}(good_bins{i} == j) = 0;
+                good_bins{i}(good_bins{i} == 0) = [];
+                bad_bins{i} = unique(sort([bad_bins{i} j]));
+                
+            elseif any(data_raw(i,(j-1)*time_bin*sfreq+1:time_bin*sfreq*j) > LFP_elevation_thresh)
+                % remove extreme LFP elevations (electronic in origin? A common problem with NY394)
+                good_bins{i}(good_bins{i} == j) = 0;
+                good_bins{i}(good_bins{i} == 0) = [];
+                bad_bins{i} = unique(sort([bad_bins{i} j]));
+                
+            end
+        end
+        
         disp([num2str(i) ' channel(s) processed!'])
     
     end
