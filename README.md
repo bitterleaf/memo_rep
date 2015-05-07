@@ -16,4 +16,4 @@ Two of the inputs needed, "data\_out" and "data\_raw", can be obtained from the 
 Similar to the function above, two of the inputs needed can be found in the above paths. "unifier" also outputs a 61x1 cell containing HGP peak outlier indices for peaks that occur within clean time bins. Example (partial) output can be found at the following path, with variable "good\_peaks" representing the HGP peak outlier indices:
 - /space/mdeh4/1/halgdev/projects/xjiang/data\_rep/NY\_EEG/NY394/NY394\_D4\_morn\_clin1\_cleaned\_bins.mat
 
-NY394 good channel labels are also in the above folder.
+NY394 good channel labels are also in the above folder. Testing, testing
